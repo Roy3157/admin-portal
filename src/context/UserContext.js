@@ -1,5 +1,10 @@
 import React from "react";
 
+import{ createClient }  from '@supabase/supabase-js'
+const supabaseUrl = 'https://snqmybgrurossgixkuyg.supabase.co'
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNucW15YmdydXJvc3NnaXhrdXlnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTY5OTYxNDg1OSwiZXhwIjoyMDE1MTkwODU5fQ.UZg22z-osvKL5Yoq7hX8-allaO70bKx98g36VRoxGXY"
+const supabase = createClient(supabaseUrl, supabaseKey)
+
 var UserStateContext = React.createContext();
 var UserDispatchContext = React.createContext();
 
@@ -45,32 +50,74 @@ function useUserDispatch() {
   return context;
 }
 
-export { UserProvider, useUserState, useUserDispatch, loginUser, signOut };
+export { UserProvider, useUserState, useUserDispatch, loginUser, signOut ,signUp};
 
 // ###########################################################
 
-function loginUser(dispatch, login, password, history, setIsLoading, setError) {
+async function loginUser(dispatch, email, password, history, setIsLoading, setError) {
   setError(false);
   setIsLoading(true);
-
-  if (!!login && !!password) {
-    setTimeout(() => {
-      localStorage.setItem('id_token', 1)
-      setError(null)
-      setIsLoading(false)
-      dispatch({ type: 'LOGIN_SUCCESS' })
-
-      history.push('/app/dashboard')
-    }, 2000);
-  } else {
+  let { data, error } = await supabase.auth.signInWithPassword({
+    email: email,
+    password: password
+  })
+  debugger
+  
+  if(error)
+  {
     dispatch({ type: "LOGIN_FAILURE" });
     setError(true);
-    setIsLoading(false);
+   setIsLoading(false);
+   return
   }
+  localStorage.setItem('id_token', 1)
+         setError(null)
+        setIsLoading(false)
+        dispatch({ type: 'LOGIN_SUCCESS' })
+
+
+
+  // if (!!login && !!password) {
+  //   setTimeout(() => {
+  //     localStorage.setItem('id_token', 1)
+  //     setError(null)
+  //     setIsLoading(false)
+  //     dispatch({ type: 'LOGIN_SUCCESS' })
+
+  //     history.push('/app/dashboard')
+  //   }, 2000);
+  // } else {
+  //   dispatch({ type: "LOGIN_FAILURE" });
+  //   setError(true);
+  //   setIsLoading(false);
+  // }
 }
 
 function signOut(dispatch, history) {
   localStorage.removeItem("id_token");
   dispatch({ type: "SIGN_OUT_SUCCESS" });
   history.push("/login");
+}
+
+async function signUp(dispatch, email, password, history, setIsLoading, setError){
+
+  setError(false);
+  setIsLoading(true);
+  
+let { data, error } = await supabase.auth.signUp({
+  email: email,
+  password: password
+})
+
+if(error)
+{
+  dispatch({ type: "LOGIN_FAILURE" });
+  setError(true);
+ setIsLoading(false);
+ return
+}
+localStorage.setItem('id_token', 1)
+       setError(null)
+      setIsLoading(false)
+      dispatch({ type: 'LOGIN_SUCCESS' })
 }

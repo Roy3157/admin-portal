@@ -20,7 +20,7 @@ import logo from "./logo.svg";
 import google from "../../images/google.svg";
 
 // context
-import { useUserDispatch, loginUser } from "../../context/UserContext";
+import { useUserDispatch, loginUser,signUp } from "../../context/UserContext";
 
 function Login(props) {
   var classes = useStyles();
@@ -202,7 +202,7 @@ function Login(props) {
                 ) : (
                   <Button
                     onClick={() =>
-                      loginUser(
+                      signUp(
                         userDispatch,
                         loginValue,
                         passwordValue,
