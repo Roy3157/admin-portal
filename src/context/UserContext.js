@@ -61,7 +61,7 @@ async function loginUser(dispatch, email, password, history, setIsLoading, setEr
     email: email,
     password: password
   })
-  debugger
+  console.log(data)
   
   if(error)
   {
@@ -108,6 +108,7 @@ let { data, error } = await supabase.auth.signUp({
   email: email,
   password: password
 })
+console.log(data)
 
 if(error)
 {
