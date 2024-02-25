@@ -31,8 +31,8 @@ jobs:
     # Add the following steps to commit and push build folder
     - name: Commit and Push changes
       run: |
-        git config --global user.email "github-actions@github.com"
-        git config --global user.name "GitHub Actions"
+        git config --global user.email "gli0471@hotmail.com"
+        git config --global user.name "Alex"
         git add .
         git commit -m "Add npm build files"
         git push
